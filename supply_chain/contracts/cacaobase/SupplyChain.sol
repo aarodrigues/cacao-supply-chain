@@ -227,6 +227,13 @@ contract SupplyChain {
     emit Sold(_upc)
   }
 
+  // Function to transfer money to all actors on the supply chain
+  function buyAsset(uint _upc, uint _percentage_profit, address _sellerID) paidEnough(msg.value) checkValue(_upc) public payable 
+  {
+    uint price = Item[_upc].productPrice + (Item[_upc].productPrice * _percentage_profit)/100;
+    _sellerID.transfer(price);
+  }
+
   // Define a function 'shipItem' that allows the distributor to mark an item 'Shipped'
   // Use the above modifers to check if the item is sold
   function shipItem(uint _upc) sold(_upc) verifyCaller(Item[_upc].distributorID) public 
@@ -252,6 +259,10 @@ contract SupplyChain {
     Item[_upc].retailerID = msg.sender;
     Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Received;
+    // set profit margin to distributor
+    uint profit_percentage = 25;
+    // Transfer money to distributor
+    buyAsset(_upc,profit_percentage,Item[_upc].distributorID);
     // Emit the appropriate event
     emit Received(_upc);
   }
@@ -267,6 +278,10 @@ contract SupplyChain {
     Item[_upc].consumerID = msg.sender;
     Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Purchased;
+    // set profit margin to distributor
+    uint profit_percentage = 10;
+    // Transfer money to retailer
+    buyAsset(_upc,profit_percentage,Item[_upc].retailerID);
     // Emit the appropriate event
     emit Purchased(_upc);
   }
