@@ -7,49 +7,45 @@ import "./Roles.sol";
 contract ConsumerRole {
 
   // Define 2 events, one for Adding, and other for Removing
-  event Add(address _address);
-  event Remove(address _address);
+  event ConsumerAdded(address _address);
+  event ConsumerRemoved(address _address);
   // Define a struct 'consumers' by inheriting from 'Roles' library, struct Role
   Roles.Role private consumers;
   // In the constructor make the address that deploys this contract the 1st consumer
-  constructor(address[] memory _consumers) public {
-    // for (uint256 i = 0; i < _consumers.length; ++i) {
-    //         consumers.add(_consumers[i]);
-    //     }
-    consumers.add(_consumers[i]);
+  constructor() public {
+    _addConsumer(msg.sender);
   }
 
   // Define a modifier that checks to see if msg.sender has the appropriate role
   modifier onlyConsumer() {
-     require(consumers.has(msg.sender), "DOES_NOT_HAVE_CONSUMER_ROLE");
+    require(isComposer(msg.sender), "DOES_NOT_HAVE_CONSUMER_ROLE");
     _;
   }
 
   // Define a function 'isConsumer' to check this role
   function isConsumer(address account) public view returns (bool) {
-    if(msg.sender == account)
-       return true;
-    
-    return false
+    return consumers.has(account)
   }
 
   // Define a function 'addConsumer' that adds this role
   function addConsumer(address account) public onlyConsumer {
-    consumers.add(account);
+    _addConsumer(account);
   }
 
   // Define a function 'renounceConsumer' to renounce this role
   function renounceConsumer() public {
-    consumers.remove(account);
+    _removeConsumer(msg.sender);
   }
 
   // Define an internal function '_addConsumer' to add this role, called by 'addConsumer'
   function _addConsumer(address account) internal {
-    
+    consumers.add(account);
+    emit ConsumerAdded(account);
   }
 
   // Define an internal function '_removeConsumer' to remove this role, called by 'removeConsumer'
   function _removeConsumer(address account) internal {
-    
+    consumers.remove(account);
+    emit ConsumerRemoved(account);
   }
 }

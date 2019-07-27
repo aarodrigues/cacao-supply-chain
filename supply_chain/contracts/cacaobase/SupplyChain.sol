@@ -167,7 +167,7 @@ contract SupplyChain {
   }
 
   // Define a function 'processtItem' that allows a farmer to mark an item 'Processed'
-  function processItem(uint _upc) harvested(_upc) verifyCaller(item[_upc].ownerID) public 
+  function processItem(uint _upc) harvested(_upc) verifyCaller(item[_upc].originFarmerID) public 
   // Call modifier to check if upc has passed previous supply chain stage
   
   // Call modifier to verify caller of this function
@@ -180,7 +180,7 @@ contract SupplyChain {
   }
 
   // Define a function 'packItem' that allows a farmer to mark an item 'Packed'
-  function packItem(uint _upc) processed(_upc) verifyCaller(item[_upc].ownerID) public 
+  function packItem(uint _upc) processed(_upc) verifyCaller(item[_upc].originFarmerID) public 
   // Call modifier to check if upc has passed previous supply chain stage
   
   // Call modifier to verify caller of this function
@@ -193,7 +193,7 @@ contract SupplyChain {
   }
 
   // Define a function 'sellItem' that allows a farmer to mark an item 'ForSale'
-  function sellItem(uint _upc, uint _price) packed(_upc) verifyCaller(item[_upc].ownerID) public 
+  function sellItem(uint _upc, uint _price) packed(_upc) verifyCaller(item[_upc].originFarmerID) public 
   // Call modifier to check if upc has passed previous supply chain stage
   
   // Call modifier to verify caller of this function
@@ -218,11 +218,11 @@ contract SupplyChain {
     {
     
     // Update the appropriate fields - ownerID, distributorID, itemState
-    Item[_upc].itemState = itemState.Sold;
-    Item[_upc].providerID = msg.sender;
+    Item[_upc].distributorID = msg.sender;
     Item[_upc].ownerID = msg.sender;
+    Item[_upc].itemState = itemState.Sold;
     // Transfer money to farmer
-    Items[_upc].ownerID.transfer(Item[_upc].productPrice);
+    Items[_upc].originFarmerID.transfer(Item[_upc].productPrice);
     // emit the appropriate event
     emit Sold(_upc)
   }
@@ -249,6 +249,8 @@ contract SupplyChain {
     // Access Control List enforced by calling Smart Contract / DApp
     {
     // Update the appropriate fields - ownerID, retailerID, itemState
+    Item[_upc].retailerID = msg.sender;
+    Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Received;
     // Emit the appropriate event
     emit Received(_upc);
@@ -262,6 +264,8 @@ contract SupplyChain {
     // Access Control List enforced by calling Smart Contract / DApp
     {
     // Update the appropriate fields - ownerID, consumerID, itemState
+    Item[_upc].consumerID = msg.sender;
+    Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Purchased;
     // Emit the appropriate event
     emit Purchased(_upc);
