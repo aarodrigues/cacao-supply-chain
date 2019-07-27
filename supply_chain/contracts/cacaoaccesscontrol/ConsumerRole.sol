@@ -5,7 +5,8 @@ import "./Roles.sol";
 
 // Define a contract 'ConsumerRole' to manage this role - add, remove, check
 contract ConsumerRole {
-
+  using Roles for Roles.Role;
+  
   // Define 2 events, one for Adding, and other for Removing
   event ConsumerAdded(address _address);
   event ConsumerRemoved(address _address);
@@ -18,13 +19,13 @@ contract ConsumerRole {
 
   // Define a modifier that checks to see if msg.sender has the appropriate role
   modifier onlyConsumer() {
-    require(isComposer(msg.sender), "DOES_NOT_HAVE_CONSUMER_ROLE");
+    require(isConsumer(msg.sender), "DOES_NOT_HAVE_CONSUMER_ROLE");
     _;
   }
 
   // Define a function 'isConsumer' to check this role
   function isConsumer(address account) public view returns (bool) {
-    return consumers.has(account)
+    return consumers.has(account);
   }
 
   // Define a function 'addConsumer' that adds this role

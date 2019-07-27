@@ -5,7 +5,8 @@ import "./Roles.sol";
 
 // Define a contract 'DistributorRole' to manage this role - add, remove, check
 contract DistributorRole {
-
+  using Roles for Roles.Role;
+  
   // Define 2 events, one for Adding, and other for Removing
   event DistributorAdded(address _address);
   event DistributorRemoved(address _address);
@@ -34,7 +35,7 @@ contract DistributorRole {
 
   // Define a function 'renounceDistributor' to renounce this role
   function renounceDistributor() public {
-    _removeDistributor(msg.sender)
+    _removeDistributor(msg.sender);
   }
 
   // Define an internal function '_addDistributor' to add this role, called by 'addDistributor'
