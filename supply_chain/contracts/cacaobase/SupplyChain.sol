@@ -1,5 +1,12 @@
 pragma solidity ^0.4.24;
+
+import "./../cacaoaccesscontrol/DistributorRole.sol";
+import "./../cacaoaccesscontrol/FarmerRole.sol";
+import "./../cacaoaccesscontrol/RetailerRole.sol";
+import "./../cacaoaccesscontrol/ConsumerRole.sol";
+
 // Define a contract 'Supplychain'
+// contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole {
 contract SupplyChain {
 
   // Define 'owner'
@@ -79,13 +86,20 @@ contract SupplyChain {
     require(msg.value >= _price); 
     _;
   }
-  
+ 
   // Define a modifier that checks the price and refunds the remaining balance
   modifier checkValue(uint _upc) {
     _;
     uint _price = items[_upc].productPrice;
     uint amountToReturn = msg.value - _price;
     items[_upc].consumerID.transfer(amountToReturn);
+  }
+
+  // Define a modifier that checks the price and refunds the remaining balance
+  modifier checkValueFrom(uint _upc, uint _price, address _refundOwner) {
+    _;
+    uint amountToReturn = msg.value - _price;
+    _refundOwner.transfer(amountToReturn);
   }
 
   // Define a modifier that checks if an item.state of a upc is Harvested
@@ -208,7 +222,7 @@ contract SupplyChain {
   // Define a function 'buyItem' that allows the disributor to mark an item 'Sold'
   // Use the above defined modifiers to check if the item is available for sale, if the buyer has paid enough, 
   // and any excess ether sent is refunded back to the buyer
-  function buyItem(uint _upc) forSale(_upc) paidEnough(msg.value) checkValue(_upc) public payable 
+  function buyItem(uint _upc) forSale(_upc) paidEnough(Item[_upc].productPrice) checkValue(_upc) public payable 
     // Call modifier to check if upc has passed previous supply chain stage
     
     // Call modifer to check if buyer has paid enough
@@ -228,10 +242,9 @@ contract SupplyChain {
   }
 
   // Function to transfer money to all actors on the supply chain
-  function buyAsset(uint _upc, uint _percentage_profit, address _sellerID) paidEnough(msg.value) checkValue(_upc) public payable 
+  function buyAsset(uint _upc, uint _price, address _sellerID) paidEnough(_price) checkValueFrom(_upc, _price, msg.sender) public payable 
   {
-    uint price = Item[_upc].productPrice + (Item[_upc].productPrice * _percentage_profit)/100;
-    _sellerID.transfer(price);
+    _sellerID.transfer(_price);
   }
 
   // Define a function 'shipItem' that allows the distributor to mark an item 'Shipped'
@@ -259,17 +272,17 @@ contract SupplyChain {
     Item[_upc].retailerID = msg.sender;
     Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Received;
-    // set profit margin to distributor
-    uint profit_percentage = 25;
+    // new value based a 10% profit
+    uint price = Item[_upc].productPrice + (Item[_upc].productPrice * 25)/100;
     // Transfer money to distributor
-    buyAsset(_upc,profit_percentage,Item[_upc].distributorID);
+    buyAsset(_upc,price,Item[_upc].distributorID);
     // Emit the appropriate event
     emit Received(_upc);
   }
 
   // Define a function 'purchaseItem' that allows the consumer to mark an item 'Purchased'
   // Use the above modifiers to check if the item is received
-  function purchaseItem(uint _upc) received(_upc) verifyCaller(Item[_upc].consumerID) public 
+  function  (uint _upc) received(_upc) verifyCaller(Item[_upc].consumerID) public 
     // Call modifier to check if upc has passed previous supply chain stage
     
     // Access Control List enforced by calling Smart Contract / DApp
@@ -278,10 +291,10 @@ contract SupplyChain {
     Item[_upc].consumerID = msg.sender;
     Item[_upc].ownerID = msg.sender;
     Item[_upc].itemState = itemState.Purchased;
-    // set profit margin to distributor
-    uint profit_percentage = 10;
+    // new value based a 10% profit
+    uint price = Item[_upc].productPrice + (Item[_upc].productPrice * 10)/100;
     // Transfer money to retailer
-    buyAsset(_upc,profit_percentage,Item[_upc].retailerID);
+    buyAsset(_upc,price,Item[_upc].retailerID);
     // Emit the appropriate event
     emit Purchased(_upc);
   }
