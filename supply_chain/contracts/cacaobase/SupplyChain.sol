@@ -97,8 +97,9 @@ contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole 
   }
 
   // Define a modifier that checks the price and refunds the remaining balance
-  modifier checkValueFrom(uint _upc, uint _price, address _refundOwner) {
+  modifier checkValueFrom(uint _upc, address _refundOwner) {
     _;
+    uint _price = items[_upc].productPrice;
     uint amountToReturn = msg.value - _price;
     _refundOwner.transfer(amountToReturn);
   }
@@ -244,7 +245,7 @@ contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole 
   }
 
   // Function to transfer money to all actors on the supply chain
-  function buyAsset(uint _upc, address _sellerID) paidEnough(items[_upc].productPrice) checkValueFrom(_upc, items[_upc].productPrice, msg.sender) public payable 
+  function buyAsset(uint _upc, address _sellerID) paidEnough(items[_upc].productPrice) checkValueFrom(_upc, msg.sender) public payable 
   {
     _sellerID.transfer(items[_upc].productPrice);
   }
