@@ -7,11 +7,8 @@ import "./../cacaoaccesscontrol/RetailerRole.sol";
 import "./../cacaoaccesscontrol/ConsumerRole.sol";
 
 // Define a contract 'Supplychain'
-contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole {
+contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, ConsumerRole {
 // contract SupplyChain {
-
-  // Define 'owner'
-  address owner;
 
   // Define a variable called 'upc' for Universal Product Code (UPC)
   uint  upc;
@@ -69,12 +66,6 @@ contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole 
   event Shipped(uint upc);
   event Received(uint upc);
   event Purchased(uint upc);
-
-  // Define a modifer that checks to see if msg.sender == owner of the contract
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
 
   // Define a modifer that verifies the Caller
   modifier verifyCaller (address _address) {
@@ -156,23 +147,20 @@ contract SupplyChain is DistributorRole, FarmerRole, RetailerRole, ConsumerRole 
   // and set 'sku' to 1
   // and set 'upc' to 1
   constructor() public payable {
-    owner = msg.sender;
     sku = 1;
     upc = 1;
   }
 
   // Define a function 'kill' if required
-  function kill() public {
-    if (msg.sender == owner) {
-      selfdestruct(owner);
-    }
+  function kill() onlyOwner() public {  
+      selfdestruct(owner());
   }
 
   // Define a function 'harvestItem' that allows a farmer to mark an item 'Harvested'
   function harvestItem(uint _upc, address _originFarmerID, string _originFarmName, string _originFarmInformation, string  _originFarmLatitude, string  _originFarmLongitude, string  _productNotes) onlyFarmer() public 
   {
     // Add the new item as part of Harvest
-    items[_upc] = Item({sku: sku, upc: _upc, ownerID: owner, originFarmerID: _originFarmerID, originFarmName: _originFarmName,
+    items[_upc] = Item({sku: sku, upc: _upc, ownerID: owner(), originFarmerID: _originFarmerID, originFarmName: _originFarmName,
      originFarmInformation: _originFarmInformation, originFarmLatitude:  _originFarmLatitude, 
      originFarmLongitude:  _originFarmLongitude, productID: sku + upc, productNotes:  _productNotes, productPrice: 0,
      itemState: State.Harvested, distributorID: 0, retailerID: 0, consumerID: 0});
