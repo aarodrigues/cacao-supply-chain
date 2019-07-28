@@ -88,12 +88,12 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
   }
 
   // Define a modifier that checks the price and refunds the remaining balance
-  modifier checkValueFrom(uint _upc, address _refundOwner) {
-    _;
-    uint _price = items[_upc].productPrice;
-    uint amountToReturn = msg.value - _price;
-    _refundOwner.transfer(amountToReturn);
-  }
+  // modifier checkValueFrom(uint _upc, address _refundOwner) {
+  //   _;
+  //   uint _price = items[_upc].productPrice;
+  //   uint amountToReturn = msg.value - _price;
+  //   _refundOwner.transfer(amountToReturn);
+  // }
 
   // Define a modifier that checks if an item.state of a upc is Harvested
   modifier harvested(uint _upc) {
@@ -233,10 +233,10 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
   }
 
   // Function to transfer money to all actors on the supply chain
-  function buyAsset(uint _upc, address _sellerID) paidEnough(items[_upc].productPrice) checkValueFrom(_upc, msg.sender) public payable 
-  {
-    _sellerID.transfer(items[_upc].productPrice);
-  }
+  // function buyAsset(uint _upc, address _sellerID) paidEnough(items[_upc].productPrice) checkValueFrom(_upc, msg.sender) public payable 
+  // {
+  //   _sellerID.transfer(items[_upc].productPrice);
+  // }
 
   // Define a function 'shipItem' that allows the distributor to mark an item 'Shipped'
   // Use the above modifers to check if the item is sold
@@ -263,11 +263,13 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
     items[_upc].retailerID = msg.sender;
     items[_upc].ownerID = msg.sender;
     items[_upc].itemState = State.Received;
-    // new value based a 10% profit
-    items[_upc].productPrice = items[_upc].productPrice + (items[_upc].productPrice * 20)/100;
-    // Transfer money to distributor
-    buyAsset(_upc,items[_upc].distributorID);
-    // Emit the appropriate event
+    
+    // // new value based a 10% profit
+    // items[_upc].productPrice = items[_upc].productPrice + (items[_upc].productPrice * 20)/100;
+    // // Transfer money to distributor
+    // buyAsset(_upc,items[_upc].distributorID);
+    // // Emit the appropriate event
+
     emit Received(_upc);
   }
 
@@ -282,11 +284,13 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
     items[_upc].consumerID = msg.sender;
     items[_upc].ownerID = msg.sender;
     items[_upc].itemState = State.Purchased;
-    // new value based a 10% profit
-    items[_upc].productPrice = items[_upc].productPrice + (items[_upc].productPrice * 10)/100;
-    // Transfer money to retailer
-    buyAsset(_upc,items[_upc].retailerID);
-    // Emit the appropriate event
+
+    // // new value based a 10% profit
+    // items[_upc].productPrice = items[_upc].productPrice + (items[_upc].productPrice * 10)/100;
+    // // Transfer money to retailer
+    // buyAsset(_upc,items[_upc].retailerID);
+    // // Emit the appropriate event
+    
     emit Purchased(_upc);
   }
 
