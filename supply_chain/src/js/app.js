@@ -97,6 +97,11 @@ App = {
         })
     },
 
+    testWorking: function(){
+        console.log("sauuuu");
+        window.alert("one");
+    },
+
     initSupplyChain: function () {
         /// Source the truffle compiled smart contracts
         var jsonSupplyChain='../../build/contracts/SupplyChain.json';
