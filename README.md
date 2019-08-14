@@ -6,7 +6,8 @@ Ethereum supply chain to autheticate cacao.
 
 Contract was deployed on Rinkeby Network.
 
-Rinkeby Contract Address:
+Rinkeby Supply Chain Contract Address: 0xed9aae1c03acb66acfd254294330a2148b0d791c
+Trasaction ID: 0x95a7c093ec08b80e9b09bb8b44c2acc11967270b9b0a4619429e93bbb1f3e3a2
 
 UML diagrams: Activity, Sequence, State, Classes (Data Model)
 
