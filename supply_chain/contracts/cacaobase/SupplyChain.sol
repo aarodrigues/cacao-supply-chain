@@ -213,7 +213,7 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
   // Define a function 'buyItem' that allows the disributor to mark an item 'Sold'
   // Use the above defined modifiers to check if the item is available for sale, if the buyer has paid enough, 
   // and any excess ether sent is refunded back to the buyer
-  function buyItem(uint _upc) forSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) public payable 
+  function buyItem(uint _upc) forSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) onlyDistributor() public payable 
     // Call modifier to check if upc has passed previous supply chain stage
     
     // Call modifer to check if buyer has paid enough
@@ -254,7 +254,7 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
 
   // Define a function 'receiveItem' that allows the retailer to mark an item 'Received'
   // Use the above modifiers to check if the item is shipped
-  function receiveItem(uint _upc) shipped(_upc) verifyCaller(items[_upc].retailerID) onlyRetailer() public 
+  function receiveItem(uint _upc) shipped(_upc) onlyRetailer() public 
     // Call modifier to check if upc has passed previous supply chain stage
     
     // Access Control List enforced by calling Smart Contract / DApp
@@ -275,7 +275,7 @@ contract SupplyChain is Ownable, DistributorRole, FarmerRole, RetailerRole, Cons
 
   // Define a function 'purchaseItem' that allows the consumer to mark an item 'Purchased'
   // Use the above modifiers to check if the item is received
-  function  purchaseItem(uint _upc) received(_upc) verifyCaller(items[_upc].consumerID) onlyConsumer() public 
+  function  purchaseItem(uint _upc) received(_upc) onlyConsumer() public 
     // Call modifier to check if upc has passed previous supply chain stage
     
     // Access Control List enforced by calling Smart Contract / DApp

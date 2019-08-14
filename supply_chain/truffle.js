@@ -6,8 +6,8 @@ const mnemonic = fs.readFileSync(".secret").toString().trim();
 module.exports = {
   networks: {
     development: {
-      //host: "127.0.0.1",
-      host: "172.17.0.2", //docker ip
+      host: "127.0.0.1",
+      //host: "172.17.0.2", //docker ip
       port: 8545,
       network_id: "*" // Match any network id
     },
