@@ -43,7 +43,7 @@ contract('SupplyChain', function(accounts) {
 
 
     // 1st Test
-    it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async() => {
+    it("Testing smart contract function harvestItem() that allows a farmer to harvest cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
 
         await supplyChain.addFarmer(originFarmerID)
@@ -79,7 +79,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 2nd Test
-    it("Testing smart contract function processItem() that allows a farmer to process coffee", async() => {
+    it("Testing smart contract function processItem() that allows a farmer to process cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
@@ -112,7 +112,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 3rd Test
-    it("Testing smart contract function packItem() that allows a farmer to pack coffee", async() => {
+    it("Testing smart contract function packItem() that allows a farmer to pack cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
@@ -145,7 +145,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 4th Test
-    it("Testing smart contract function sellItem() that allows a farmer to sell coffee", async() => {
+    it("Testing smart contract function sellItem() that allows a farmer to sell cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
@@ -178,7 +178,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 5th Test
-    it("Testing smart contract function buyItem() that allows a distributor to buy coffee", async() => {
+    it("Testing smart contract function buyItem() that allows a distributor to buy cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
 
         await supplyChain.addDistributor(distributorID)
@@ -214,7 +214,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 6th Test
-    it("Testing smart contract function shipItem() that allows a distributor to ship coffee", async() => {
+    it("Testing smart contract function shipItem() that allows a distributor to ship cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
@@ -250,7 +250,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 7th Test
-    it("Testing smart contract function receiveItem() that allows a retailer to mark coffee received", async() => {
+    it("Testing smart contract function receiveItem() that allows a retailer to mark cacao received", async() => {
         const supplyChain = await SupplyChain.deployed()
 
         await supplyChain.addRetailer(retailerID)
@@ -286,7 +286,7 @@ contract('SupplyChain', function(accounts) {
     })    
 
     // 8th Test
-    it("Testing smart contract function purchaseItem() that allows a consumer to purchase coffee", async() => {
+    it("Testing smart contract function purchaseItem() that allows a consumer to purchase cacao", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         await supplyChain.addConsumer(consumerID)
